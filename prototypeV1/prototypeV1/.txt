@@ -1,0 +1,5 @@
+override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if let dateVC = segue.destination as? DateViewController {
+        dateVC.delegate = self
+    }
+}
