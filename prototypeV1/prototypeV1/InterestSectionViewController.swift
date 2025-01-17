@@ -1,13 +1,13 @@
 //
-//  GamesViewController.swift
+//  InterestSectionViewController.swift
 //  prototypeV1
 //
-//  Created by Chelsea Singla on 11/12/24.
+//  Created by Chelsea Singla on 17/01/25.
 //
 
 import UIKit
 
-class GamesViewController: UIViewController {
+class InterestSectionViewController: UIViewController {
     var selectedGameType: String?
     
     @IBOutlet weak var createGameButton: UIButton!
@@ -22,25 +22,25 @@ class GamesViewController: UIViewController {
        @IBOutlet weak var dateLabel: UILabel!
        @IBOutlet weak var skillLabel: UILabel!
        @IBOutlet weak var locationLabel: UILabel!
-
- var filteredGames: [GameData] = []
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupUI()
-        setupGameCardTapGesture()
-        
-        if let gameType = selectedGameType {
-            navigationItem.title = gameType
-            filterGames()
-            
-        }
-        
-        // Filter and display games based on selected type
+    var filteredGames: [GameData] = []
        
-        gameCardView.isHidden = true
-    }
-        
+       override func viewDidLoad() {
+           super.viewDidLoad()
+           setupUI()
+           setupGameCardTapGesture()
+           
+           if let gameType = selectedGameType {
+               navigationItem.title = gameType
+               filterGames()
+               
+           }
+           
+           // Filter and display games based on selected type
+          
+           gameCardView.isHidden = true
+       }
+    
     private func setupGameCardTapGesture() {
          let tapGesture = UITapGestureRecognizer(target: self, action: #selector(gameCardTapped))
          gameCardView.addGestureRecognizer(tapGesture)
@@ -50,6 +50,8 @@ class GamesViewController: UIViewController {
     @objc private func gameCardTapped() {
            performSegue(withIdentifier: "showBadmintonGame", sender: self)
        }
+    
+
     
     private var gamesData: [GameData] = [
            // Badminton Events
@@ -264,18 +266,18 @@ class GamesViewController: UIViewController {
             print("Playing status tapped")
         }
     
-    
+ 
+
 }
 
-
-extension GamesViewController: UITabBarDelegate {
+extension InterestSectionViewController:  UITabBarDelegate {
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         // Handle tab selection
         print("Selected tab at index: \(item.tag)")
     }
 }
 
-extension GamesViewController: CreateGameDelegate {
+extension InterestSectionViewController: CreateGameDelegate {
     func gameCreated(sport: String, area: String, date: String, time: String) {
         // Update UI with new game
         regularLabel.text = "Regular"

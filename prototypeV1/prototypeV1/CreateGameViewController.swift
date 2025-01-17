@@ -13,7 +13,6 @@ protocol CreateGameDelegate: AnyObject {
 
 class CreateGameViewController: UIViewController {
 
-    
     @IBOutlet weak var sportButton: UIButton!
        @IBOutlet weak var areaButton: UIButton!
        @IBOutlet weak var dateButton: UIButton!
