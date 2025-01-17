@@ -268,6 +268,37 @@ class MyHubCollectionViewController: UICollectionViewController {
         }
     }
 
+    private func setupHeaderTapGesture(header: UICollectionReusableView, section: Int) {
+           // Remove any existing gesture recognizers
+           header.gestureRecognizers?.forEach { header.removeGestureRecognizer($0) }
+           
+           // Only add gesture recognizer to Games section header
+           if section == 2 {  // Games section
+               let tapGesture = UITapGestureRecognizer(target: self, action: #selector(gamesSectionHeaderTapped))
+               header.addGestureRecognizer(tapGesture)
+               header.isUserInteractionEnabled = true
+               
+               // Add a visual indicator that the header is tappable
+               if let label = header.subviews.first as? UILabel {
+                   let arrowImageView = UIImageView(image: UIImage(systemName: "chevron.right"))
+                   arrowImageView.tintColor = .white
+                   arrowImageView.translatesAutoresizingMaskIntoConstraints = false
+                   header.addSubview(arrowImageView)
+                   
+                   NSLayoutConstraint.activate([
+                       arrowImageView.centerYAnchor.constraint(equalTo: header.centerYAnchor),
+                       arrowImageView.trailingAnchor.constraint(equalTo: header.trailingAnchor, constant: -15)
+                   ])
+               }
+           }
+       }
+    
+    @objc private func gamesSectionHeaderTapped() {
+         let storyboard = UIStoryboard(name: "Main", bundle: nil)
+         if let filterVC = storyboard.instantiateViewController(withIdentifier: "GamesEventsFilterViewController") as? GamesEventsFilterViewController {
+             navigationController?.pushViewController(filterVC, animated: true)
+         }
+     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerReuseIdentifier, for: indexPath)
@@ -290,6 +321,7 @@ class MyHubCollectionViewController: UICollectionViewController {
         label.textColor = .white
         header.addSubview(label)
         
+        setupHeaderTapGesture(header: header, section: indexPath.section)
         
         return header
     }

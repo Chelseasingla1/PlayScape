@@ -2919,10 +2919,10 @@
             </objects>
             <point key="canvasLocation" x="12811" y="-1227"/>
         </scene>
-        <!--Games Events Filter Table View Controller-->
+        <!--Games Events Filter View Controller-->
         <scene sceneID="HGE-G9-sRv">
             <objects>
-                <viewController storyboardIdentifier="GamesEventsFilterTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Pq4-i0-MwX" customClass="GamesEventsFilterTableViewController" customModule="prototypeV1" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="GamesEventsFilterViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Pq4-i0-MwX" customClass="GamesEventsFilterViewController" customModule="prototypeV1" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="emO-1x-IVL">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2954,7 +2954,7 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="GamesEventCell" rowHeight="160" id="lcx-I5-1Q2" customClass="GameEventTableViewCell" customModule="prototypeV1" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="GameEventTableViewCell" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="GamesEventCell" rowHeight="160" id="lcx-I5-1Q2" customClass="GameEventTableViewCell" customModule="prototypeV1" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="393" height="160"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="lcx-I5-1Q2" id="MpF-Vx-IeM">
@@ -3047,15 +3047,22 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sEc-DC-VqH">
+                                <rect key="frame" x="315" y="75" width="62" height="35"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Filter"/>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="dGF-Sm-WSp"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="dGF-Sm-WSp" firstAttribute="trailing" secondItem="opA-nA-e0r" secondAttribute="trailing" id="3sn-s2-fVd"/>
                             <constraint firstItem="28I-Ez-Bk9" firstAttribute="top" secondItem="dGF-Sm-WSp" secondAttribute="top" constant="16" id="5Xg-JF-Qrh"/>
+                            <constraint firstItem="sEc-DC-VqH" firstAttribute="top" secondItem="dGF-Sm-WSp" secondAttribute="top" constant="16" id="6wR-Tv-Iaf"/>
                             <constraint firstItem="WPi-X8-QP4" firstAttribute="top" secondItem="28I-Ez-Bk9" secondAttribute="bottom" constant="16" id="9q1-Ek-7hL"/>
                             <constraint firstItem="opA-nA-e0r" firstAttribute="leading" secondItem="dGF-Sm-WSp" secondAttribute="leading" id="Deb-gn-62o"/>
                             <constraint firstItem="28I-Ez-Bk9" firstAttribute="leading" secondItem="dGF-Sm-WSp" secondAttribute="leading" constant="16" id="IUh-6j-1mM"/>
+                            <constraint firstItem="dGF-Sm-WSp" firstAttribute="trailing" secondItem="sEc-DC-VqH" secondAttribute="trailing" constant="16" id="V78-31-m0C"/>
                             <constraint firstItem="dGF-Sm-WSp" firstAttribute="bottom" secondItem="opA-nA-e0r" secondAttribute="bottom" id="cF1-xH-hE7"/>
                             <constraint firstItem="WPi-X8-QP4" firstAttribute="leading" secondItem="dGF-Sm-WSp" secondAttribute="leading" constant="16" id="n2d-TS-8cS"/>
                             <constraint firstItem="opA-nA-e0r" firstAttribute="top" secondItem="WPi-X8-QP4" secondAttribute="bottom" constant="16" id="yl9-fv-Rgk"/>
