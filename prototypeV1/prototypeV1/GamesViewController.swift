@@ -61,7 +61,8 @@ class GamesViewController: UIViewController {
                gameType: "Badminton",
                gameIcon: "figure.badminton",
                date: "26 Dec, Night",
-               location: "Court 1, Chitkara university"
+               location: "Court 1, Chitkara university",
+               time:"19:00"
            ),
            GameData(
                personName: "Sarah Parker",
@@ -71,7 +72,8 @@ class GamesViewController: UIViewController {
                gameType: "Badminton",
                gameIcon: "figure.badminton",
                date: "28 Dec, Evening",
-               location: "Court 2, Chitkara university"
+               location: "Court 2, Chitkara university",
+               time:"19:00"
            ),
            
            // Basketball Events
@@ -83,7 +85,8 @@ class GamesViewController: UIViewController {
                gameType: "Basketball",
                gameIcon: "figure.basketball",
                date: "27 Dec, Evening",
-               location: "Basketball Court, Chitkara university"
+               location: "Basketball Court, Chitkara university",
+               time:"19:00"
            ),
            
            // Cricket Events
@@ -95,7 +98,8 @@ class GamesViewController: UIViewController {
                gameType: "Cricket",
                gameIcon: "figure.cricket",
                date: "30 Dec, Morning",
-               location: "Cricket Ground, Chitkara university"
+               location: "Cricket Ground, Chitkara university",
+               time:"19:00"
            ),
            
            // Football Events
@@ -107,7 +111,8 @@ class GamesViewController: UIViewController {
                gameType: "Football",
                gameIcon: "figure.football",
                date: "28 Dec, Evening",
-               location: "Football Field, Chitkara university"
+               location: "Football Field, Chitkara university",
+               time:"19:00"
            )
        ]
        
@@ -277,14 +282,82 @@ extension GamesViewController: UITabBarDelegate {
 
 extension GamesViewController: CreateGameDelegate {
     func gameCreated(sport: String, area: String, date: String, time: String) {
-        // Update UI with new game
-        regularLabel.text = "Regular"
-        nameLabel.text = "Alex Garrison"
-        attendanceLabel.text = "1 Going"
-//        skillLabel.text = "Beginner"
-//        dateLabel.text = "\(date), \(time)"
-//        locationLabel.text = area
-        playingButton.isHidden = false
+        // Create new game data
+        let newGame = GameData.createNew(sport: sport, area: area, date: date, time: time)
+        
+        // Add to filtered games if it matches current filter
+        if selectedGameType == nil || selectedGameType == sport {
+            filteredGames.insert(newGame, at: 0)  // Add to beginning of array
+            
+            // Update the games created count
+            gamesCreatedLabel.text = "\(filteredGames.count) Games Created"
+            
+            // Update UI with new game
+            updateUIWithGame(newGame)
+            
+            // Show game card with animation
+            UIView.animate(withDuration: 0.3) {
+                self.gameCardView.alpha = 0
+                self.gameCardView.isHidden = false
+            } completion: { _ in
+                UIView.animate(withDuration: 0.3) {
+                    self.gameCardView.alpha = 1
+                }
+            }
+            
+            // Configure card details
+            regularLabel.text = "New Game"
+            nameLabel.text = "Created by You"
+            attendanceLabel.text = "1 Going"
+            dateLabel.text = "\(date)"
+            locationLabel.text = area
+            
+            // Set up profile image
+            profileImageView.image = UIImage(systemName: "person.circle.fill")
+            profileImageView.tintColor = .systemGray
+            
+            // Configure playing button
+            playingButton.setTitle("Hosting", for: .normal)
+            playingButton.backgroundColor = .systemBlue
+            
+            // Add the game to the main gamesData array as well
+            gamesData.insert(newGame, at: 0)
+        }
+    }
+}
+
+private extension GamesViewController {
+    func formatGameDateTime(_ date: String, _ time: String) -> String {
+        return "\(date), \(time)"
+    }
+    
+    func updateUIWithNewGame(_ game: GameData) {
+        // Configure card appearance
+        gameCardView.layer.shadowColor = UIColor.black.cgColor
+        gameCardView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        gameCardView.layer.shadowRadius = 4
+        gameCardView.layer.shadowOpacity = 0.1
+        
+        // Update labels with game info
+        regularLabel.text = "New Game"
+        nameLabel.text = game.personName
+        attendanceLabel.text = game.going
+        
+        if let gameDate = game.date, let gameTime = game.time {
+            dateLabel.text = formatGameDateTime(gameDate, gameTime)
+        }
+        
+        locationLabel.text = game.location
+        
+        // Configure profile image
+        if game.personImage.contains("person.circle") {
+            profileImageView.image = UIImage(systemName: game.personImage)
+            profileImageView.tintColor = .systemGray
+        } else {
+            profileImageView.image = UIImage(named: game.personImage)
+        }
+        
+        // Show the card
         gameCardView.isHidden = false
     }
 }

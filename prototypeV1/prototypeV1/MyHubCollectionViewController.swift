@@ -21,6 +21,22 @@ struct GameData {
     let gameIcon: String
     let date: String?
     let location: String?
+    let time: String?
+    
+    static func createNew(sport: String, area: String, date: String, time: String) -> GameData {
+        return GameData(
+            personName: "You",  // Or get current user's name
+            personImage: "person.circle",  // Default profile image
+            going: "1 Going",
+            mutual: "0 Mutual",
+            gameType: sport,
+            gameIcon: "figure.\(sport.lowercased())",
+            date: date,
+            location: area,
+            time: time
+        )
+    }
+
 }
 
 class MyHubCollectionViewController: UICollectionViewController {
@@ -75,7 +91,8 @@ class MyHubCollectionViewController: UICollectionViewController {
             gameType: "Boxing",
             gameIcon: "figure.boxing",
             date: "26 Dec, Night",
-            location: "Court 1, Chitkara university"
+            location: "Court 1, Chitkara university",
+            time: "10:00 PM"
         ),
         GameData(
             personName: "Aseem Bhardwaj",
@@ -85,7 +102,8 @@ class MyHubCollectionViewController: UICollectionViewController {
             gameType: "Badminton",
             gameIcon: "figure.badminton",
             date: "26 Dec, Night",
-            location: "Court 1, Chitkara university"
+            location: "Court 1, Chitkara university",
+            time:"10:00 PM"
         ),
      
     ]

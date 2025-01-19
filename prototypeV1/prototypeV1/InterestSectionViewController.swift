@@ -63,7 +63,8 @@ class InterestSectionViewController: UIViewController {
                gameType: "Badminton",
                gameIcon: "figure.badminton",
                date: "26 Dec, Night",
-               location: "Court 1, Chitkara university"
+               location: "Court 1, Chitkara university",
+               time:"19:00"
            ),
            GameData(
                personName: "Sarah Parker",
@@ -73,7 +74,8 @@ class InterestSectionViewController: UIViewController {
                gameType: "Badminton",
                gameIcon: "figure.badminton",
                date: "28 Dec, Evening",
-               location: "Court 2, Chitkara university"
+               location: "Court 2, Chitkara university",
+               time:"19:00"
            ),
            
            // Basketball Events
@@ -85,7 +87,8 @@ class InterestSectionViewController: UIViewController {
                gameType: "Basketball",
                gameIcon: "figure.basketball",
                date: "27 Dec, Evening",
-               location: "Basketball Court, Chitkara university"
+               location: "Basketball Court, Chitkara university",
+               time:"19:00"
            ),
            
            // Cricket Events
@@ -97,7 +100,8 @@ class InterestSectionViewController: UIViewController {
                gameType: "Cricket",
                gameIcon: "figure.cricket",
                date: "30 Dec, Morning",
-               location: "Cricket Ground, Chitkara university"
+               location: "Cricket Ground, Chitkara university",
+               time:"19:00"
            ),
            
            // Football Events
@@ -109,7 +113,8 @@ class InterestSectionViewController: UIViewController {
                gameType: "Football",
                gameIcon: "figure.football",
                date: "28 Dec, Evening",
-               location: "Football Field, Chitkara university"
+               location: "Football Field, Chitkara university",
+               time:"19:00"
            )
        ]
        

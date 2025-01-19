@@ -12,7 +12,6 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var universityLabel: UILabel!
-    
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var birthdateLabel: UILabel!
     @IBOutlet weak var schoolLabel: UILabel!

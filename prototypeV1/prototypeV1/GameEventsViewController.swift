@@ -26,7 +26,8 @@ class GameEventsViewController: UIViewController {
                gameType: "Badminton",
                gameIcon: "figure.badminton",
                date: "12 Nov, Evening",
-               location: "Court 1, chitkara university"
+               location: "Court 1, chitkara university",
+               time:"19:00"
               /// skillLevel: "Beginner"
            ),
            GameData(
@@ -37,7 +38,8 @@ class GameEventsViewController: UIViewController {
                gameType: "Badminton",
                gameIcon: "figure.badminton",
                date: "22 Nov, Evening",
-               location: "Court 1, chitkara university"
+               location: "Court 1, chitkara university",
+               time:"19:00"
              ///  skillLevel: "Beginner"
            )
        ]

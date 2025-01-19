@@ -57,9 +57,10 @@ class CreateGameViewController: UIViewController {
         // MARK: - Actions
         @IBAction func sportButtonTapped(_ sender: UIButton) {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            if let sportVC = storyboard.instantiateViewController(withIdentifier: "SportViewController") as? SportViewController {
-                navigationController?.pushViewController(sportVC, animated: true)
-            }
+                if let sportVC = storyboard.instantiateViewController(withIdentifier: "SportViewController") as? SportViewController {
+                    sportVC.delegate = self  // Set the delegate
+                    navigationController?.pushViewController(sportVC, animated: true)
+                }
         }
     
     private func setupInitialButtonStates() {
@@ -104,11 +105,13 @@ class CreateGameViewController: UIViewController {
        }
     
     
+    
     @IBAction func areaButtonTapped(_ sender: UIButton) {
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            if let areaVC = storyboard.instantiateViewController(withIdentifier: "AreaViewController") as? AreaViewController {
-                navigationController?.pushViewController(areaVC, animated: true)
-            }
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+           if let areaVC = storyboard.instantiateViewController(withIdentifier: "AreaViewController") as? AreaViewController {
+               areaVC.delegate = self  // Set the delegate
+               navigationController?.pushViewController(areaVC, animated: true)
+           }
         }
         
         @IBAction func createGameButtonTapped(_ sender: UIButton) {
@@ -133,13 +136,21 @@ class CreateGameViewController: UIViewController {
         }
     
     @IBAction func dateButtonTapped(_ sender: UIButton) {
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        if let dateVC = storyboard.instantiateViewController(withIdentifier: "DateViewController") as? DateViewController {
-//            dateVC.delegate = self
-//            navigationController?.pushViewController(dateVC, animated: true)
-//        }
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            if let dateVC = storyboard.instantiateViewController(withIdentifier: "DateViewController") as? DateViewController {
+                dateVC.delegate = self  // Set the delegate
+                navigationController?.pushViewController(dateVC, animated: true)
+            }
     }
 
+    
+    @IBAction func timeButtonTapped(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let timeVC = storyboard.instantiateViewController(withIdentifier: "TimeViewController") as? TimeViewController {
+            timeVC.delegate = self  // Set the delegate
+            navigationController?.pushViewController(timeVC, animated: true)
+        }
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
@@ -177,6 +188,19 @@ extension CreateGameViewController: TimeViewControllerDelegate {
         updateButtonState(timeButton, withSelection: timeSlot)
     }
 }
+
+extension CreateGameViewController: SportViewControllerDelegate {
+    func sportSelected(_ sport: String) {
+        updateButtonState(sportButton, withSelection: sport)
+    }
+}
+
+extension CreateGameViewController: AreaViewControllerDelegate {
+    func areaSelected(_ area: String) {
+        updateButtonState(areaButton, withSelection: area)
+    }
+}
+
 
 //extension CreateGameViewController: SportViewControllerDelegate {
 //    func sportSelected(_ sport: String) {

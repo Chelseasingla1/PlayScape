@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol SportViewControllerDelegate: AnyObject {
+    func sportSelected(_ sport: String)
+}
+
 class SportViewController: UIViewController {
+    
+    weak var delegate: SportViewControllerDelegate?
     
     @IBOutlet weak var searchBar: UISearchBar!
         @IBOutlet weak var collectionView: UICollectionView!
@@ -43,13 +49,24 @@ extension SportViewController: UICollectionViewDelegate, UICollectionViewDataSou
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SportCell", for: indexPath) as! SportCell
         let sport = filteredSports[indexPath.item]
         cell.sportLabel.text = sport
+        cell.backgroundColor = .black
+        cell.contentView.backgroundColor = .black
+        
+        cell.layer.cornerRadius = 10
+           cell.clipsToBounds = true
+        
+        cell.layer.borderWidth = 1.0
+           cell.layer.borderColor = UIColor.white.cgColor  // White border
+        
         cell.sportImageView.image = UIImage(systemName: sport.lowercased())
+        cell.sportLabel.textColor = .white
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let sport = filteredSports[indexPath.item]
         // Handle selection and pass back to previous screen
+        delegate?.sportSelected(sport)
         navigationController?.popViewController(animated: true)
     }
 }

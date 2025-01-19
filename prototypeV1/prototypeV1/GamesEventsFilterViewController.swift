@@ -22,7 +22,8 @@ class GamesEventsFilterViewController: UIViewController {
                 gameType: "Badminton",
                 gameIcon: "figure.badminton",
                 date: "12 Nov, Evening",
-                location: "Court 1, chitkara university"
+                location: "Court 1, chitkara university",
+                time:"19:00"
             ),
             GameData(
                 personName: "Alex Garrison",
@@ -32,7 +33,8 @@ class GamesEventsFilterViewController: UIViewController {
                 gameType: "Basketball",
                 gameIcon: "basketball.fill",
                 date: "22 Nov, Evening",
-                location: "Court 2, chitkara university"
+                location: "Court 2, chitkara university",
+                time:"19:00"
             )
         ]
         
