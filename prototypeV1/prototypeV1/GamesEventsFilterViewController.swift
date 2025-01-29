@@ -13,32 +13,8 @@ class GamesEventsFilterViewController: UIViewController {
         @IBOutlet weak var gamesCreatedLabel: UILabel!
         @IBOutlet weak var tableView: UITableView!
         
-        private var gamesData: [GameData] = [
-            GameData(
-                personName: "Hailey Anderson",
-                personImage: "profile1",
-                going: "1 Going",
-                mutual: "2 Mutual",
-                gameType: "Badminton",
-                gameIcon: "figure.badminton",
-                date: "12 Nov, Evening",
-                location: "Court 1, chitkara university",
-                time:"19:00"
-            ),
-            GameData(
-                personName: "Alex Garrison",
-                personImage: "profile2",
-                going: "1 Going",
-                mutual: "3 Mutual",
-                gameType: "Basketball",
-                gameIcon: "basketball.fill",
-                date: "22 Nov, Evening",
-                location: "Court 2, chitkara university",
-                time:"19:00"
-            )
-        ]
-        
-        var filteredGames: [GameData] = []
+    private let gameDataManager = GameDataManager.shared
+    private var filteredGames: [GameData] = []
         private var selectedGameTypes: Set<String> = []
         
         override func viewDidLoad() {
@@ -46,10 +22,50 @@ class GamesEventsFilterViewController: UIViewController {
             setupUI()
             setupTableView()
             setupFilterButton()
-            filteredGames = gamesData
-            updateGamesCreatedLabel()
+            initializeGamesData()
+            applyFilters()
         }
         
+    private func initializeGamesData() {
+           // Add sample data if needed
+           let sampleGames = [
+               GameData(
+                   id: 1,
+                   personName: "Hailey Anderson",
+                   personImage: "profile1",
+                   going: "1 Going",
+                   mutual: "2 Mutual",
+                   gameType: "Badminton",
+                   gameIcon: "figure.badminton",
+                   date: "12 Nov, Evening",
+                   location: "Court 1, chitkara university",
+                   time: "19:00",
+                   isCompleted: false
+               ),
+               GameData(
+                   id: 2,
+                   personName: "Alex Garrison",
+                   personImage: "profile2",
+                   going: "1 Going",
+                   mutual: "3 Mutual",
+                   gameType: "Basketball",
+                   gameIcon: "basketball.fill",
+                   date: "22 Nov, Evening",
+                   location: "Court 2, chitkara university",
+                   time: "19:00",
+                   isCompleted: false
+               )
+           ]
+           
+           // Add sample games if they don't exist
+           sampleGames.forEach { game in
+               if gameDataManager.getAllGames().contains(where: { $0.id == game.id }) == false {
+                   gameDataManager.addGame(game)
+               }
+           }
+       }
+       
+    
         // MARK: - Setup
         private func setupUI() {
             view.backgroundColor = .black
@@ -86,35 +102,35 @@ class GamesEventsFilterViewController: UIViewController {
         
         @objc private func filterButtonTapped() {
             let alertController = UIAlertController(title: "Filter by Game Type",
-                                                  message: nil,
-                                                  preferredStyle: .actionSheet)
-            
-            // Get unique game types
-            let gameTypes = Array(Set(gamesData.map { $0.gameType }))
-            
-            for gameType in gameTypes {
-                let isSelected = selectedGameTypes.contains(gameType)
-                let action = UIAlertAction(title: gameType, style: .default) { [weak self] _ in
-                    self?.toggleGameTypeFilter(gameType)
-                }
-                action.setValue(isSelected, forKey: "checked")
-                alertController.addAction(action)
-            }
-            
-            let clearFiltersAction = UIAlertAction(title: "Clear Filters", style: .destructive) { [weak self] _ in
-                self?.clearFilters()
-            }
-            alertController.addAction(clearFiltersAction)
-            
-            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-            alertController.addAction(cancelAction)
-            
-            // For iPad support
-            if let popoverController = alertController.popoverPresentationController {
-                popoverController.barButtonItem = navigationItem.rightBarButtonItem
-            }
-            
-            present(alertController, animated: true)
+                                                          message: nil,
+                                                          preferredStyle: .actionSheet)
+                    
+                    // Get unique game types from GameDataManager
+                    let gameTypes = Array(Set(gameDataManager.getAllGames().map { $0.gameType }))
+                    
+                    for gameType in gameTypes {
+                        let isSelected = selectedGameTypes.contains(gameType)
+                        let action = UIAlertAction(title: gameType, style: .default) { [weak self] _ in
+                            self?.toggleGameTypeFilter(gameType)
+                        }
+                        action.setValue(isSelected, forKey: "checked")
+                        alertController.addAction(action)
+                    }
+                    
+                    let clearFiltersAction = UIAlertAction(title: "Clear Filters", style: .destructive) { [weak self] _ in
+                        self?.clearFilters()
+                    }
+                    alertController.addAction(clearFiltersAction)
+                    
+                    let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+                    alertController.addAction(cancelAction)
+                    
+                    if let popoverController = alertController.popoverPresentationController {
+                        popoverController.barButtonItem = navigationItem.rightBarButtonItem
+                    }
+                    
+                    present(alertController, animated: true)
+             
         }
         
         private func toggleGameTypeFilter(_ gameType: String) {
@@ -131,15 +147,16 @@ class GamesEventsFilterViewController: UIViewController {
             applyFilters()
         }
         
-        private func applyFilters() {
-            if selectedGameTypes.isEmpty {
-                filteredGames = gamesData
-            } else {
-                filteredGames = gamesData.filter { selectedGameTypes.contains($0.gameType) }
-            }
-            updateGamesCreatedLabel()
-            tableView.reloadData()
-        }
+    private func applyFilters() {
+           let allGames = gameDataManager.getAllGames()
+           if selectedGameTypes.isEmpty {
+               filteredGames = allGames
+           } else {
+               filteredGames = allGames.filter { selectedGameTypes.contains($0.gameType) }
+           }
+           updateGamesCreatedLabel()
+           tableView.reloadData()
+       }
         
         // MARK: - Actions
         @IBAction func createGameTapped(_ sender: UIButton) {
@@ -173,15 +190,26 @@ extension GamesEventsFilterViewController: UITableViewDelegate, UITableViewDataS
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let gameData = filteredGames[indexPath.row]
-        print("Selected game: \(gameData.personName)")
-    }
+            let gameData = filteredGames[indexPath.row]
+            navigateToGameDetails(with: gameData)
+        }
+        
+        private func navigateToGameDetails(with game: GameData) {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            if let gameDetailsVC = storyboard.instantiateViewController(withIdentifier: "BadmintonGameViewController") as? BadmintonGameViewController {
+                gameDetailsVC.gameTitle = game.personName
+                gameDetailsVC.gameLocation = game.location ?? ""
+                gameDetailsVC.gameDate = game.date ?? ""
+                navigationController?.pushViewController(gameDetailsVC, animated: true)
+            }
+        }
 }
 
 // MARK: - CreateGameDelegate
 extension GamesEventsFilterViewController: CreateGameDelegate {
     func gameCreated(sport: String, area: String, date: String, time: String) {
-        // Handle new game creation
-        applyFilters()
-    }
+            let newGame = GameData.createNew(sport: sport, area: area, date: date, time: time)
+            gameDataManager.addGame(newGame)
+            applyFilters()
+        }
 }

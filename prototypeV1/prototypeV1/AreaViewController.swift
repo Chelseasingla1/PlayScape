@@ -49,9 +49,13 @@ class AreaViewController: UIViewController {
     private func setupUI() {
             title = "Area"
             searchBar.placeholder = "Search"
-            
+        
+        searchBar.barStyle = .black
+                searchBar.tintColor = .white
+        view.backgroundColor = .black
             tableView.delegate = self
             tableView.dataSource = self
+        tableView.backgroundColor = .black
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "LocationCell")
            
         }
@@ -79,15 +83,18 @@ extension AreaViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "LocationCell", for: indexPath)
         
+        cell.backgroundColor = .black
+               cell.textLabel?.textColor = .white
+        
         if indexPath.section == 0 {
             cell.textLabel?.text = "Current Location using GPS"
             cell.imageView?.image = UIImage(systemName: "location.fill")
-            cell.imageView?.tintColor = .systemBlue
+            cell.imageView?.tintColor = .white
         } else {
             let location = filteredLocations[indexPath.row]
             cell.textLabel?.text = location
             cell.imageView?.image = UIImage(systemName: "mappin.circle.fill")
-            cell.imageView?.tintColor = .systemGray
+            cell.imageView?.tintColor = .white 
         }
         
         return cell

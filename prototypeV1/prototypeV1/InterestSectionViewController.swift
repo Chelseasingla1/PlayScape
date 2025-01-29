@@ -24,11 +24,13 @@ class InterestSectionViewController: UIViewController {
        @IBOutlet weak var locationLabel: UILabel!
     
     var filteredGames: [GameData] = []
-       
+    private let gameDataManager = GameDataManager.shared
+    
        override func viewDidLoad() {
            super.viewDidLoad()
            setupUI()
            setupGameCardTapGesture()
+           initializeGamesData()
            
            if let gameType = selectedGameType {
                navigationItem.title = gameType
@@ -40,6 +42,52 @@ class InterestSectionViewController: UIViewController {
           
            gameCardView.isHidden = true
        }
+    
+    private func initializeGamesData() {
+            let sampleGames = [
+                GameData(
+                    id: 1,
+                    personName: "Aseem Bhardwaj",
+                    personImage: "person1",
+                    going: "5 Going",
+                    mutual: "2 Mutual",
+                    gameType: "Badminton",
+                    gameIcon: "figure.badminton",
+                    date: "26 Dec, Night",
+                    location: "Court 1, Chitkara university",
+                    time: "19:00",
+                    isCompleted: false
+                ),
+                GameData(
+                    id: 2,
+                    personName: "Sarah Parker",
+                    personImage: "person2",
+                    going: "8 Going",
+                    mutual: "3 Mutual",
+                    gameType: "Basketball",
+                    gameIcon: "figure.basketball",
+                    date: "28 Dec, Evening",
+                    location: "Court 2, Chitkara university",
+                    time: "19:00",
+                    isCompleted: false
+                )
+                // Add other sample games with proper IDs
+            ]
+            
+            // Initialize GameDataManager with sample data if needed
+            sampleGames.forEach { game in
+                if !gameDataManager.getAllGames().contains(where: { $0.id == game.id }) {
+                    gameDataManager.addGame(game)
+                }
+            }
+        }
+        
+    
+    override func viewWillAppear(_ animated: Bool) {
+           super.viewWillAppear(animated)
+           filterGames() // Refresh games when view appears
+       }
+       
     
     private func setupGameCardTapGesture() {
          let tapGesture = UITapGestureRecognizer(target: self, action: #selector(gameCardTapped))
@@ -53,85 +101,22 @@ class InterestSectionViewController: UIViewController {
     
 
     
-    private var gamesData: [GameData] = [
-           // Badminton Events
-           GameData(
-               personName: "Aseem Bhardwaj",
-               personImage: "person1",
-               going: "5 Going",
-               mutual: "2 Mutual",
-               gameType: "Badminton",
-               gameIcon: "figure.badminton",
-               date: "26 Dec, Night",
-               location: "Court 1, Chitkara university",
-               time:"19:00"
-           ),
-           GameData(
-               personName: "Sarah Parker",
-               personImage: "person2",
-               going: "8 Going",
-               mutual: "3 Mutual",
-               gameType: "Badminton",
-               gameIcon: "figure.badminton",
-               date: "28 Dec, Evening",
-               location: "Court 2, Chitkara university",
-               time:"19:00"
-           ),
-           
-           // Basketball Events
-           GameData(
-               personName: "Alex Garrison",
-               personImage: "person3",
-               going: "10 Going",
-               mutual: "4 Mutual",
-               gameType: "Basketball",
-               gameIcon: "figure.basketball",
-               date: "27 Dec, Evening",
-               location: "Basketball Court, Chitkara university",
-               time:"19:00"
-           ),
-           
-           // Cricket Events
-           GameData(
-               personName: "Rahul Kumar",
-               personImage: "person5",
-               going: "12 Going",
-               mutual: "5 Mutual",
-               gameType: "Cricket",
-               gameIcon: "figure.cricket",
-               date: "30 Dec, Morning",
-               location: "Cricket Ground, Chitkara university",
-               time:"19:00"
-           ),
-           
-           // Football Events
-           GameData(
-               personName: "David Wilson",
-               personImage: "person7",
-               going: "14 Going",
-               mutual: "4 Mutual",
-               gameType: "Football",
-               gameIcon: "figure.football",
-               date: "28 Dec, Evening",
-               location: "Football Field, Chitkara university",
-               time:"19:00"
-           )
-       ]
+        
        
     
     private func filterGames() {
-          guard let gameType = selectedGameType else { return }
-          
-          // Filter games based on selected type
-          filteredGames = gamesData.filter { $0.gameType == gameType }
-          
-          // Update UI with first filtered game
-          if let firstGame = filteredGames.first {
-              updateUIWithGame(firstGame)
-          } else {
-              gameCardView.isHidden = true
-          }
-      }
+           guard let gameType = selectedGameType else { return }
+           
+           filteredGames = gameDataManager.getGamesOfType(gameType)
+           
+           if let firstGame = filteredGames.first {
+               updateUIWithGame(firstGame)
+           } else {
+               gameCardView.isHidden = true
+           }
+           
+           gamesCreatedLabel.text = "\(filteredGames.count) Games Created"
+       }
       
     
     private func updateUIWithGame(_ game: GameData) {
@@ -142,30 +127,30 @@ class InterestSectionViewController: UIViewController {
             dateLabel.text = game.date ?? "Date unavailable"
             locationLabel.text = game.location ?? "Location unavailable"
             
-            // Update profile image if available
-            if let image = UIImage(named: game.personImage) {
-                profileImageView.image = image
-            } else {
-                profileImageView.image = UIImage(systemName: "person.circle.fill")
-            }
-            
-            // Configure playing button
-            playingButton.isHidden = false
-            playingButton.setTitle("Playing", for: .normal)
-            playingButton.backgroundColor = .systemGreen
-            playingButton.layer.cornerRadius = 12
-            
-            // Show the game card
-            gameCardView.isHidden = false
-            gameCardView.layer.cornerRadius = 10
-            
-            // Style labels
-            attendanceLabel.textColor = .systemGray
-            
-            // Update games created label if needed
-            gamesCreatedLabel.text = "\(filteredGames.count) Games Created"
+        updateProfileImage(with: game.personImage)
+               updatePlayingButton()
+               showGameCard()
         }
 
+    private func updateProfileImage(with imageName: String) {
+          if let image = UIImage(named: imageName) {
+              profileImageView.image = image
+          } else {
+              profileImageView.image = UIImage(systemName: "person.circle.fill")
+          }
+      }
+      
+      private func updatePlayingButton() {
+          playingButton.isHidden = false
+          playingButton.setTitle("Playing", for: .normal)
+          playingButton.backgroundColor = .systemGreen
+      }
+      
+      private func showGameCard() {
+          gameCardView.isHidden = false
+      }
+      
+    
     private func updateGameCards() {
         // Hide game card if no games available
         gameCardView.isHidden = filteredGames.isEmpty
@@ -212,27 +197,29 @@ class InterestSectionViewController: UIViewController {
 
     
     private func setupUI() {
-            // Configure game card view
-            gameCardView.layer.cornerRadius = 10
-           // gameCardView.backgroundColor = .systemGray6
-            
-            // Configure profile image view
-            profileImageView.layer.cornerRadius = 20
-            profileImageView.clipsToBounds = true
-            
-            // Configure playing button
-            playingButton.layer.cornerRadius = 12
-          //  playingButton.backgroundColor = .systemGreen
-            
-            // Configure labels
-          //  skillLabel.textColor = .systemGray
-           // dateLabel.textColor = .systemGray
-            attendanceLabel.textColor = .systemGray
-          //  locationLabel.textColor = .systemGray
-            
-            // Configure tab bar
-            //tabBar.selectedItem = tabBar.items?[1]
+        configureGameCard()
+               configureProfileImage()
+               configurePlayingButton()
+               configureLabels()
         }
+    
+    private func configureGameCard() {
+           gameCardView.layer.cornerRadius = 10
+       }
+       
+       private func configureProfileImage() {
+           profileImageView.layer.cornerRadius = 20
+           profileImageView.clipsToBounds = true
+       }
+       
+       private func configurePlayingButton() {
+           playingButton.layer.cornerRadius = 12
+       }
+       
+       private func configureLabels() {
+           attendanceLabel.textColor = .systemGray
+       }
+       
     
     private func setupNavigationBar() {
             let titleLabel = UILabel()
@@ -284,14 +271,11 @@ extension InterestSectionViewController:  UITabBarDelegate {
 
 extension InterestSectionViewController: CreateGameDelegate {
     func gameCreated(sport: String, area: String, date: String, time: String) {
-        // Update UI with new game
-        regularLabel.text = "Regular"
-        nameLabel.text = "Alex Garrison"
-        attendanceLabel.text = "1 Going"
-//        skillLabel.text = "Beginner"
-//        dateLabel.text = "\(date), \(time)"
-//        locationLabel.text = area
-        playingButton.isHidden = false
-        gameCardView.isHidden = false
+        let newGame = GameData.createNew(sport: sport, area: area, date: date, time: time)
+        gameDataManager.addGame(newGame)
+        
+        if selectedGameType == nil || selectedGameType == sport {
+            filterGames()
+        }
     }
 }

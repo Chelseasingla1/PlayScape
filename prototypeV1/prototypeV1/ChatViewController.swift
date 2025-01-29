@@ -44,10 +44,16 @@ class ChatViewController: UIViewController {
          // Configure profile image
          profileImageView.layer.cornerRadius = profileImageView.frame.width / 2
          profileImageView.clipsToBounds = true
-         profileImageView.image = userImage
+        // profileImageView.image = userImage
          
+     if let image = userImage {
+              profileImageView.image = image
+          } else {
+              profileImageView.image = UIImage(systemName: "person.circle.fill")
+          }
+     
          // Configure labels
-         nameLabel.text = userName
+     nameLabel.text = userName.isEmpty ? "User" : userName
          universityLabel.text = "Chitkara University"
          
          // Configure navigation bar

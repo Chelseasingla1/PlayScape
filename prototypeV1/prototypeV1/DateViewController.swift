@@ -36,6 +36,9 @@ class DateViewController: UIViewController {
     private func setupUI() {
            title = "Select Date"
            
+        view.backgroundColor = .black
+        
+  
            // Configure quick date buttons
            [todayButton, tomorrowButton, dayAfterButton].forEach { button in
                button?.backgroundColor = .darkGray
@@ -55,7 +58,14 @@ class DateViewController: UIViewController {
             datePicker.preferredDatePickerStyle = .inline
             datePicker.minimumDate = Date()
             
+        datePicker.backgroundColor = .black
+                datePicker.tintColor = .white
             // Set maximum date to 3 months from now
+        
+        if #available(iOS 13.0, *) {
+                    datePicker.overrideUserInterfaceStyle = .dark
+                }
+        
             if let maxDate = calendar.date(byAdding: .month, value: 3, to: Date()) {
                 datePicker.maximumDate = maxDate
             }
@@ -101,6 +111,13 @@ class DateViewController: UIViewController {
                target: self,
                action: #selector(doneButtonTapped)
            )
+        
+        navigationController?.navigationBar.tintColor = .white
+               navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+               if #available(iOS 13.0, *) {
+                   navigationController?.navigationBar.barTintColor = .black
+               }
+        
        }
        
     

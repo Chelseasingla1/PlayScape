@@ -8,7 +8,7 @@
 import UIKit
 
 protocol GroupCreationDelegate: AnyObject {
-    func didCreateGroup(_ group: Message)
+    func didCreateGroup(_ group: MessagePreview)
 }
 
 class CreateGroupViewController: UIViewController {
@@ -39,6 +39,8 @@ class CreateGroupViewController: UIViewController {
     private func setupUI() {
             title = "New Group"
             
+        view.backgroundColor = .black
+        
             // Navigation bar setup
             navigationItem.leftBarButtonItem = UIBarButtonItem(
                 title: "Back",
@@ -47,12 +49,16 @@ class CreateGroupViewController: UIViewController {
                 action: #selector(backTapped)
             )
             
+        navigationItem.leftBarButtonItem?.tintColor = .white
+        
             navigationItem.rightBarButtonItem = UIBarButtonItem(
                 title: "Create",
                 style: .done,
                 target: self,
                 action: #selector(createTapped)
             )
+        
+        
             
             // Setup text field
             groupNameTextField.placeholder = "Group Name"
@@ -75,48 +81,44 @@ class CreateGroupViewController: UIViewController {
             navigationController?.popViewController(animated: true)
         }
         
-        @objc private func createTapped() {
-            guard let groupName = groupNameTextField.text, !groupName.isEmpty else {
-                // Show alert for empty group name
-                let alert = UIAlertController(title: "Error", message: "Please enter a group name", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default))
-                present(alert, animated: true)
-                return
-            }
-            
-            print("Creating group with name:", groupName)
-            
-            // Create group message
-            let groupMessage = Message(
-                userName: groupName,
-                messageCount: 0,
-                timeAgo: "Just now",
-                userImage: UIImage(named: "group_placeholder")
-            )
-            
-            // Check if delegate exists
-            if let delegate = delegate {
-                    print("Delegate exists, calling didCreateGroup")
-                    delegate.didCreateGroup(groupMessage)
-                } else {
-                    print("Warning: delegate is nil")
-                    // Try to find MessageViewController from navigation stack
-                    if let messageVC = navigationController?.viewControllers.first(where: { $0 is MessageViewController }) as? MessageViewController {
-                        print("Found MessageViewController, setting delegate and calling didCreateGroup")
-                        self.delegate = messageVC
-                        messageVC.didCreateGroup(groupMessage)
-                    } else {
-                        print("Could not find MessageViewController in navigation stack")
-                    }
-                }
-            
-            // Notify delegate
-         //   delegate?.didCreateGroup(groupMessage)
-            
-            // Dismiss all the way back to messages
-            navigationController?.popToRootViewController(animated: true)
+    @objc private func createTapped() {
+        guard let groupName = groupNameTextField.text, !groupName.isEmpty else {
+            // Show alert for empty group name
+            let alert = UIAlertController(title: "Error", message: "Please enter a group name", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+            return
         }
-    /*
+        
+        print("Creating group with name:", groupName)
+        
+        // Create group message using MessagePreview
+        let groupMessage = MessagePreview(
+            userName: groupName,
+            messageCount: 0,
+            timeAgo: "Just now",
+            userImage: UIImage(named: "group_placeholder")
+        )
+        
+        // Check if delegate exists
+        if let delegate = delegate {
+            print("Delegate exists, calling didCreateGroup")
+            delegate.didCreateGroup(groupMessage)
+        } else {
+            print("Warning: delegate is nil")
+            // Try to find MessageViewController from navigation stack
+            if let messageVC = navigationController?.viewControllers.first(where: { $0 is MessageViewController }) as? MessageViewController {
+                print("Found MessageViewController, setting delegate and calling didCreateGroup")
+                self.delegate = messageVC
+                messageVC.didCreateGroup(groupMessage)
+            } else {
+                print("Could not find MessageViewController in navigation stack")
+            }
+        }
+        
+        // Dismiss all the way back to messages
+        navigationController?.popToRootViewController(animated: true)
+    }
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -124,7 +126,6 @@ class CreateGroupViewController: UIViewController {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
     }
-    */
 
 }
 

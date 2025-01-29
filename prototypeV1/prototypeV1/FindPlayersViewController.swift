@@ -29,15 +29,28 @@ class FindPlayersViewController: UIViewController {
     private func setupUI() {
             title = "Find Players"
             
+        view.backgroundColor = .black
+        navigationController?.navigationBar.barStyle = .black
+               navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+               
+        
             searchBar.delegate = self
             searchBar.placeholder = "Search"
-            
+        searchBar.barStyle = .black
+                searchBar.searchTextField.textColor = .white
+                searchBar.tintColor = .white
+        
             tableView.delegate = self
             tableView.dataSource = self
             tableView.register(FindPlayerCell.self, forCellReuseIdentifier: "FindPlayerCell")
+        tableView.backgroundColor = .black
+                tableView.separatorColor = .darkGray
+        setNeedsStatusBarAppearanceUpdate()
         }
 
-
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+            return .lightContent
+        }
 }
 
 extension FindPlayersViewController: UITableViewDelegate, UITableViewDataSource {
@@ -50,6 +63,11 @@ extension FindPlayersViewController: UITableViewDelegate, UITableViewDataSource 
         let player = isSearching ? filteredPlayers[indexPath.row] : players[indexPath.row]
         cell.configure(with: player)
         cell.delegate = self
+        
+        cell.backgroundColor = .black
+                cell.contentView.backgroundColor = .black
+                cell.textLabel?.textColor = .white
+                cell.detailTextLabel?.textColor = .white
         return cell
     }
 }

@@ -40,15 +40,28 @@ class FindFriendsViewController: UIViewController {
         
         searchBar.delegate = self
         searchBar.placeholder = "Find"
+        searchBar.barStyle = .black // Dark appearance for search bar
+        searchBar.searchTextField.textColor = .white // White text in search field
+                
         
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UserTableViewCell.self, forCellReuseIdentifier: "UserCell")
+        tableView.backgroundColor = .black // Set table view background color to black
+                tableView.separatorColor = .darkGray // Set separator color for better visibility
+        
+        // Configure section index color
+               tableView.sectionIndexColor = .white // Make section index white
+               tableView.sectionIndexBackgroundColor = .clear // Clear background for section index
         
         newGroupButton.backgroundColor = .systemBlue
         newGroupButton.layer.cornerRadius = 8
         newGroupButton.setTitle("New Group", for: .normal)
         newGroupButton.setTitleColor(.white, for: .normal)
+        
+        // Configure navigation bar appearance
+               navigationController?.navigationBar.tintColor = .white // White tint color for navigation items
+               navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             title: "Find Players",
@@ -151,6 +164,13 @@ class FindFriendsViewController: UIViewController {
             return sectionTitles[section]
         }
         
+        func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+                if let header = view as? UITableViewHeaderFooterView {
+                    header.textLabel?.textColor = .white // Make section headers white
+                    header.contentView.backgroundColor = .black // Make header background black
+                }
+            }
+        
         func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell = tableView.dequeueReusableCell(withIdentifier: "UserCell", for: indexPath) as! UserTableViewCell
             
@@ -158,6 +178,18 @@ class FindFriendsViewController: UIViewController {
             if let users = usersBySection[sectionTitle] {
                 let user = users[indexPath.row]
                 cell.configure(with: user)
+                
+                // Configure cell appearance for dark theme
+                           cell.backgroundColor = .black
+                           cell.contentView.backgroundColor = .white
+                           cell.textLabel?.textColor = .white
+                           cell.detailTextLabel?.textColor = .white
+                           
+                           // Configure selection style
+                           cell.selectionStyle = .default
+                           let selectedBackgroundView = UIView()
+                           selectedBackgroundView.backgroundColor = .darkGray
+                           cell.selectedBackgroundView = selectedBackgroundView
             }
             
             return cell

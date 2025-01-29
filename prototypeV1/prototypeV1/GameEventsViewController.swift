@@ -15,41 +15,20 @@ class GameEventsViewController: UIViewController {
        
     var selectedGameType: String?
        var filteredGames: [GameData] = []
-       
-       // Sample data
-       private var gamesData: [GameData] = [
-           GameData(
-               personName: "Hailey Anderson",
-               personImage: "profile1",
-               going: "1 Going",
-               mutual: "2 Mutual",
-               gameType: "Badminton",
-               gameIcon: "figure.badminton",
-               date: "12 Nov, Evening",
-               location: "Court 1, chitkara university",
-               time:"19:00"
-              /// skillLevel: "Beginner"
-           ),
-           GameData(
-               personName: "Hola Anderson",
-               personImage: "profile2",
-               going: "1 Going",
-               mutual: "3 Mutual",
-               gameType: "Badminton",
-               gameIcon: "figure.badminton",
-               date: "22 Nov, Evening",
-               location: "Court 1, chitkara university",
-               time:"19:00"
-             ///  skillLevel: "Beginner"
-           )
-       ]
+    private let gameDataManager = GameDataManager.shared
        
        // MARK: - Lifecycle
        override func viewDidLoad() {
            super.viewDidLoad()
            setupUI()
            setupTableView()
+           initializeGamesData()
            filterGames()
+       }
+    
+    override func viewWillAppear(_ animated: Bool) {
+           super.viewWillAppear(animated)
+           filterGames() // Refresh games when view appears
        }
     
     private func setupUI() {
@@ -72,9 +51,48 @@ class GameEventsViewController: UIViewController {
            // tableView.register(UINib(nibName: "GameEventTableViewCell", bundle: nil), forCellReuseIdentifier: GameEventTableViewCell.identifier)
        }
     
+    private func initializeGamesData() {
+           // Initialize sample data if not already present
+           let sampleGames = [
+               GameData(
+                   id: 1,
+                   personName: "Hailey Anderson",
+                   personImage: "profile1",
+                   going: "1 Going",
+                   mutual: "2 Mutual",
+                   gameType: "Badminton",
+                   gameIcon: "figure.badminton",
+                   date: "12 Nov, Evening",
+                   location: "Court 1, chitkara university",
+                   time: "19:00",
+                   isCompleted: false
+               ),
+               GameData(
+                   id: 2,
+                   personName: "Hola Anderson",
+                   personImage: "profile2",
+                   going: "1 Going",
+                   mutual: "3 Mutual",
+                   gameType: "Badminton",
+                   gameIcon: "figure.badminton",
+                   date: "22 Nov, Evening",
+                   location: "Court 1, chitkara university",
+                   time: "19:00",
+                   isCompleted: false
+               )
+           ]
+           
+           // Add sample games to GameDataManager if needed
+           sampleGames.forEach { game in
+               if gameDataManager.getAllGames().contains(where: { $0.id == game.id }) == false {
+                   gameDataManager.addGame(game)
+               }
+           }
+       }
+    
     private func filterGames() {
             if let gameType = selectedGameType {
-                filteredGames = gamesData.filter { $0.gameType == gameType }
+                filteredGames = gameDataManager.getGamesOfType(gameType)
                 updateGamesCreatedLabel()
             }
         }
@@ -117,20 +135,26 @@ extension GameEventsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // Handle cell selection if needed
         let gameData = filteredGames[indexPath.row]
-        print("Selected game: \(gameData.personName)")
+                navigateToGameDetails(with: gameData)
     }
+    
+    private func navigateToGameDetails(with game: GameData) {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            if let gameDetailsVC = storyboard.instantiateViewController(withIdentifier: "BadmintonGameViewController") as? BadmintonGameViewController {
+                gameDetailsVC.gameTitle = game.personName
+                gameDetailsVC.gameLocation = game.location ?? ""
+                gameDetailsVC.gameDate = game.date ?? ""
+                // Add any other necessary game details
+                navigationController?.pushViewController(gameDetailsVC, animated: true)
+            }
+        }
 }
-
-// MARK: - CreateGameViewController Delegate (if needed)
-//protocol CreateGameDelegate: AnyObject {
-//    func gameCreated(sport: String, area: String, date: String, time: String)
-//}
 
 extension GameEventsViewController: CreateGameDelegate {
     func gameCreated(sport: String, area: String, date: String, time: String) {
-        // Handle new game creation
+        let newGame = GameData.createNew(sport: sport, area: area, date: date, time: time)
+        gameDataManager.addGame(newGame)
         filterGames()
         tableView.reloadData()
     }

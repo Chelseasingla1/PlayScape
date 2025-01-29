@@ -16,19 +16,22 @@ class MessageViewController: UIViewController {
         
         // MARK: - Properties
     
-        private var messages: [Message] = [
-            Message(userName: "Alex Garrison", messageCount: 4, timeAgo: "6m", userImage: UIImage(named: "person")),
-            Message(userName: "Alex Garrison", messageCount: 4, timeAgo: "12m", userImage: UIImage(named: "profile2")),
-            Message(userName: "Badminton Players", messageCount: 4, timeAgo: "2 days ago", userImage: UIImage(named: "badminton"))
-        ]
-        
-        private var filteredMessages: [Message] = []
+    // Change from [Message] to [MessagePreview]
+    private var messages: [MessagePreview] = [
+        MessagePreview(userName: "Alex Garrison", messageCount: 4, timeAgo: "6m", userImage: UIImage(named: "person")),
+        MessagePreview(userName: "Alex Garrison", messageCount: 4, timeAgo: "12m", userImage: UIImage(named: "profile2")),
+        MessagePreview(userName: "Badminton Players", messageCount: 4, timeAgo: "2 days ago", userImage: UIImage(named: "badminton"))
+    ]
+
+    private var filteredMessages: [MessagePreview] = []
     
         private var isSearching: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        view.backgroundColor = .black
+        tableView.backgroundColor = .black
         // Do any additional setup after loading the view.
     }
     
@@ -50,6 +53,13 @@ class MessageViewController: UIViewController {
     }
     
     // MARK: - UI Setup
+    @objc func profileTapped() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil) //
+        let profileViewController = storyboard.instantiateViewController(withIdentifier: "AccountModalViewController")
+        navigationController?.pushViewController(profileViewController, animated: true)
+    }
+    
+    
       private func setupUI() {
           // Navigation setup
           title = "Network"
@@ -57,15 +67,21 @@ class MessageViewController: UIViewController {
               image: UIImage(systemName: "person.circle"),
               style: .plain,
               target: self,
-              action: #selector(profileTapped)
+              action: #selector(Tapped)
           )
           
+          // Creating the UIBarButtonItem
           let profileButton = UIBarButtonItem(
-                 image: UIImage(systemName: "person.circle"),
-                 style: .plain,
-                 target: self,
-                 action: #selector(profileTapped)
-             )
+              image: UIImage(systemName: "person.circle"),
+              style: .plain,
+              target: self,
+              action: #selector(profileTapped)
+          )
+
+          navigationItem.rightBarButtonItem = profileButton
+
+          
+          
           
           let addFriendsButton = UIBarButtonItem(
                  image: UIImage(systemName: "person.badge.plus"),
@@ -94,7 +110,7 @@ class MessageViewController: UIViewController {
       }
       
       // MARK: - Actions
-      @objc private func profileTapped() {
+      @objc private func Tapped() {
           // Handle profile button tap
           print("Profile tapped")
       }
@@ -113,7 +129,7 @@ class MessageViewController: UIViewController {
 //            navigationController?.pushViewController(findFriendsVC, animated: true)
 //        }
 //    }
-//    
+//
     // Add to MessageViewController
     @IBAction func findFriendsTapped(_ sender: Any) {
         if let findFriendsVC = storyboard?.instantiateViewController(withIdentifier: "FindFriendsViewController") as? FindFriendsViewController {
@@ -151,15 +167,15 @@ class MessageViewController: UIViewController {
       
       func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //          tableView.deselectRow(at: indexPath, animated: true)
-//              
+//
 //              let message = isSearching ? filteredMessages[indexPath.row] : messages[indexPath.row]
-//              
+//
 //              // Get the chat view controller from storyboard
 //              if let chatVC = storyboard?.instantiateViewController(withIdentifier: "ChatViewController") as? ChatViewController {
 //                  // Pass the data
 //                  chatVC.userName = message.userName
 //                  chatVC.userImage = message.userImage
-//                  
+//
 //                  // Push the view controller
 //                  navigationController?.pushViewController(chatVC, animated: true)
 //              }
@@ -197,21 +213,19 @@ class MessageViewController: UIViewController {
 }
 
 extension MessageViewController: GroupCreationDelegate {
-    func didCreateGroup(_ group: Message) {
-//        print("New group created:", group.userName)
-//        messages.insert(group, at: 0)
-//        tableView.reloadData()
-        
+    
+    
+    func didCreateGroup(_ group: MessagePreview) {
         print("MessageViewController: didCreateGroup called with group:", group.userName)
-                messages.insert(group, at: 0)
-                print("MessageViewController: messages count after insert:", messages.count)
-                tableView.reloadData()
+        messages.insert(group, at: 0)
+        print("MessageViewController: messages count after insert:", messages.count)
+        tableView.reloadData()
     }
 }
 
 extension MessageViewController {
     func addNewFriend(_ user: User) {
-        let newMessage = Message(
+        let newMessage = MessagePreview(
             userName: user.name,
             messageCount: 0,
             timeAgo: "Just now",
@@ -223,15 +237,15 @@ extension MessageViewController {
 }
 
 
-struct Message {
+struct MessagePreview: Equatable {
     let userName: String
     let messageCount: Int
     let timeAgo: String
     let userImage: UIImage?
     
-    static func == (lhs: Message, rhs: Message) -> Bool {
-            return lhs.userName == rhs.userName &&
-                   lhs.messageCount == rhs.messageCount &&
-                   lhs.timeAgo == rhs.timeAgo
-        }
+    static func == (lhs: MessagePreview, rhs: MessagePreview) -> Bool {
+        return lhs.userName == rhs.userName &&
+               lhs.messageCount == rhs.messageCount &&
+               lhs.timeAgo == rhs.timeAgo
+    }
 }
